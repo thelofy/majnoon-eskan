@@ -1,0 +1,30 @@
+---
+import Icon from '@/components/icons/Icon.astro';
+import type { IconName } from '@/components/icons/types';
+
+interface MetaItem {
+  label: string;
+  value: string;
+  icon: IconName;
+}
+
+interface Props {
+  items: MetaItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<dl class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  {items.map((item) => (
+    <div class="flex items-start gap-4 rounded-2xl border border-white/10 bg-eskan-charcoal p-5">
+      <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gold/15">
+        <Icon name={item.icon} class="h-5 w-5 text-gold" />
+      </div>
+      <div>
+        <dt class="text-xs font-medium uppercase tracking-luxury text-eskan-muted">{item.label}</dt>
+        <dd class="mt-1 font-medium text-eskan-ivory">{item.value}</dd>
+      </div>
+    </div>
+  ))}
+</dl>

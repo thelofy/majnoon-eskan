@@ -1,0 +1,57 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import CapabilityRow from '@/components/sections/CapabilityRow.astro';
+import { getDictionary } from '@/i18n/utils';
+
+const locale = 'fa';
+const t = getDictionary(locale);
+const pathname = Astro.url.pathname;
+---
+
+<Layout locale={locale} title={t.capabilities.title} description={t.capabilities.subtitle} pathname={pathname}>
+  <section class="editorial-container py-16 md:py-24">
+    <SectionHeader title={t.capabilities.title} subtitle={t.capabilities.subtitle} />
+    <div class="space-y-16">
+      <CapabilityRow
+        title={t.capabilities.cnc}
+        desc="تراش دقیق با دستگاه‌های ۵ محوره و برنامه‌نویسی CAM"
+        image="/assets/factory/cnc-machine-02.jpg"
+        alt="دستگاه CNC پنج محوره در کارخانه اسکان استون"
+      />
+      <CapabilityRow
+        title={t.capabilities.facade}
+        desc="تولید سرستون، قرنیز، پنل و عناصر نمای کلاسیک"
+        image="/assets/projects/villa-mollasadra/detail-02.jpg"
+        alt="جزئیات نمای سنگی ویلای ملا صدرا"
+        reversed
+      />
+      <CapabilityRow
+        title={t.capabilities.interior}
+        desc="پوشش دیواری، کف‌سازی و سنگ‌کاری داخلی لوکس"
+        image="/assets/projects/pardebaf-showroom/detail-01.jpg"
+        alt="جزئیات سنگ‌کاری داخلی شوروم پرده‌باف"
+      />
+      <CapabilityRow
+        title={t.capabilities.restoration}
+        desc="مرمت عناصر تاریخی با تکنیک‌های سنتی و مدرن"
+        image="/assets/factory/workshop-02.jpg"
+        alt="کارگاه مرمت سنگ اسکان استون"
+        reversed
+      />
+      <CapabilityRow
+        title={t.capabilities.export}
+        desc="بسته‌بندی حرفه‌ای و لجستیک بین‌المللی"
+        image="/assets/factory/loading-01.jpg"
+        alt="بارگیری سنگ برای صادرات از کارخانه اسکان استون"
+      />
+      <CapabilityRow
+        title={t.capabilities.custom}
+        desc="طراحی سه‌بعدی و نمونه‌سازی قبل از تولید انبوه"
+        image="/assets/factory/production-02.jpg"
+        alt="تولید سفارشی سنگ در خط تولید اسکان استون"
+        reversed
+      />
+    </div>
+  </section>
+</Layout>

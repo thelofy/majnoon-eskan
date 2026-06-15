@@ -1,0 +1,41 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import ProjectCard from '@/components/ui/ProjectCard.astro';
+import { getDictionary } from '@/i18n/utils';
+import { getProjectsByLocale } from '@/lib/content';
+import { entrySlug } from '@/lib/content';
+import { buildBreadcrumbJsonLd } from '@/lib/seo';
+
+const locale = 'en';
+const t = getDictionary(locale);
+const pathname = Astro.url.pathname;
+const projects = await getProjectsByLocale(locale);
+const base = `/${locale}`;
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://eskanstone.com';
+
+const jsonLd = buildBreadcrumbJsonLd([
+  { name: t.nav.home, url: `${site}${base}/` },
+  { name: t.nav.projects, url: `${site}${pathname}` },
+]);
+---
+
+<Layout locale={locale} title={t.nav.projects} description={t.sections.featuredProjects} pathname={pathname} jsonLd={jsonLd}>
+  <section class="editorial-container py-16 md:py-24">
+    <SectionHeader title={t.nav.projects} subtitle={t.hero.subtitle} />
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {projects.map((project) => (
+        <ProjectCard
+          href={`${base}/projects/${entrySlug(project.id)}`}
+          title={project.data.title}
+          description={project.data.description}
+          image={project.data.heroImage}
+          imageAlt={`${project.data.title} — Eskan Stone project in ${project.data.location}`}
+          location={project.data.location}
+          year={project.data.year}
+          ctaLabel={t.project.viewProject}
+        />
+      ))}
+    </div>
+  </section>
+</Layout>

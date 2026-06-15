@@ -1,0 +1,30 @@
+---
+import Icon from '@/components/icons/Icon.astro';
+import type { IconName } from '@/components/icons/types';
+
+interface Props {
+  title: string;
+  description: string;
+  icon: IconName;
+  theme?: 'dark' | 'light';
+}
+
+const { title, description, icon, theme = 'dark' } = Astro.props;
+const isLight = theme === 'light';
+---
+
+<div class:list={['group', isLight ? 'capability-card-light' : 'capability-card']}>
+  <div class="mb-5 flex items-center gap-3">
+    <div class:list={['h-px flex-1', isLight ? 'bg-gold/30' : 'bg-gold/20']} />
+    <div class:list={['flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border', isLight ? 'border-gold/25 bg-gold/5' : 'border-gold/20 bg-gold/5']}>
+      <Icon name={icon} class="h-5 w-5 text-gold transition-colors duration-luxury group-hover:text-gold-champagne" />
+    </div>
+    <div class:list={['h-px flex-1', isLight ? 'bg-gold/30' : 'bg-gold/20']} />
+  </div>
+  <h3 class:list={['font-display text-lg font-bold leading-snug md:text-xl', isLight ? 'text-eskan-ink' : 'text-eskan-ivory']}>
+    {title}
+  </h3>
+  <p class:list={['mt-3 line-clamp-2 text-sm leading-relaxed', isLight ? 'text-eskan-muted' : 'text-eskan-ivory/40']}>
+    {description}
+  </p>
+</div>

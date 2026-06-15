@@ -1,0 +1,22 @@
+---
+interface Props {
+  title: string;
+  desc: string;
+  image: string;
+  alt: string;
+  reversed?: boolean;
+}
+
+const { title, desc, image, alt, reversed = false } = Astro.props;
+---
+
+<div class={`grid items-center gap-8 md:grid-cols-2 md:gap-12${reversed ? ' capability-alt' : ''}`}>
+  <div class="luxury-card aspect-[4/3] overflow-hidden">
+    <img src={image} alt={alt} loading="lazy" class="image-zoom h-full w-full object-cover" />
+  </div>
+  <div class="md:px-4">
+    <h2 class="font-display text-2xl text-eskan-ivory md:text-3xl lg:text-4xl">{title}</h2>
+    <p class="mt-4 text-base leading-relaxed text-eskan-muted md:text-lg">{desc}</p>
+    <div class="mt-6 h-px w-12 bg-gold/50" />
+  </div>
+</div>

@@ -1,0 +1,41 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  align?: 'start' | 'center';
+  label?: string;
+  theme?: 'dark' | 'light';
+}
+
+const { title, subtitle, align = 'start', label, theme = 'dark' } = Astro.props;
+const centered = align === 'center';
+const isLight = theme === 'light';
+---
+
+<div class={`mb-10 md:mb-14${centered ? ' text-center' : ''}`}>
+  {label && (
+    <p class:list={['mb-4 text-[0.65rem] font-semibold uppercase tracking-luxury', isLight ? 'text-gold-deep' : 'text-gold-muted']}>
+      {label}
+    </p>
+  )}
+  <h2
+    class:list={[
+      'font-display text-2xl font-semibold leading-[1.15] tracking-editorial md:text-3xl lg:text-4xl text-balance',
+      isLight ? 'text-eskan-ink' : 'text-eskan-ivory',
+    ]}
+  >
+    {title}
+  </h2>
+  {subtitle && (
+    <p
+      class:list={[
+        'mt-4 max-w-xl text-sm leading-relaxed md:text-base text-balance',
+        isLight ? 'text-eskan-muted' : 'text-eskan-ivory/40',
+        centered && 'mx-auto',
+      ]}
+    >
+      {subtitle}
+    </p>
+  )}
+  <div class:list={['mt-6 h-px w-12', isLight ? 'bg-gold-deep/40' : 'bg-gold/30', centered && 'mx-auto']} />
+</div>

@@ -1,0 +1,61 @@
+---
+import '@/styles/global.css';
+import type { Locale } from '@/i18n/types';
+import { getLocaleConfig } from '@/i18n/utils';
+import Navbar from '@/components/common/Navbar.astro';
+import Footer from '@/components/common/Footer.astro';
+import MetaTags from '@/components/common/MetaTags.astro';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  pathname: string;
+  image?: string;
+  type?: 'website' | 'article';
+  publishedTime?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /** When true, content starts at viewport top (hero pages). */
+  fullBleed?: boolean;
+}
+
+const {
+  locale,
+  title,
+  description,
+  pathname,
+  image,
+  type,
+  publishedTime,
+  jsonLd,
+  fullBleed = false,
+} = Astro.props;
+
+const { lang, dir } = getLocaleConfig(locale);
+const fullTitle = title.includes('Eskan') || title.includes('اسکان') ? title : `${title} | Eskan Stone`;
+---
+
+<!doctype html>
+<html lang={lang} dir={dir} class="dark">
+  <head>
+    <MetaTags
+      title={fullTitle}
+      description={description}
+      locale={locale}
+      pathname={pathname}
+      image={image}
+      type={type}
+      publishedTime={publishedTime}
+      jsonLd={jsonLd}
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{fullTitle}</title>
+  </head>
+  <body class="flex min-h-screen flex-col">
+    <Navbar locale={locale} pathname={pathname} />
+    <main class:list={['flex-1', !fullBleed && 'pt-24 md:pt-28']}>
+      <slot />
+    </main>
+    <Footer locale={locale} />
+  </body>
+</html>

@@ -1,0 +1,168 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Hero from '@/components/sections/Hero.astro';
+import StatsRow from '@/components/sections/StatsRow.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import ProjectCard from '@/components/ui/ProjectCard.astro';
+import FeatureCard from '@/components/ui/FeatureCard.astro';
+import Button from '@/components/ui/Button.astro';
+import Icon from '@/components/icons/Icon.astro';
+import { getDictionary } from '@/i18n/utils';
+import { getProjectsByLocale, getSpecialWorksByLocale, getBlogByLocale, entrySlug } from '@/lib/content';
+
+const locale = 'en';
+const t = getDictionary(locale);
+const pathname = Astro.url.pathname;
+const projects = await getProjectsByLocale(locale);
+const specialWorks = await getSpecialWorksByLocale(locale);
+const blogPosts = (await getBlogByLocale(locale)).slice(0, 3);
+const base = `/${locale}`;
+
+---
+
+<Layout
+  locale={locale}
+  title={`${t.siteName} | ${t.siteTagline}`}
+  description={t.hero.subtitle}
+  pathname={pathname}
+  image="/assets/factory/hero-factory.jpg"
+  fullBleed
+>
+  <Hero
+    title={t.hero.title}
+    subtitle={t.hero.subtitle}
+    image="/assets/factory/hero-factory.jpg"
+    imageAlt="Eskan Stone production factory in Yazd with advanced CNC stone machinery"
+    ctaProjects={t.hero.ctaProjects}
+    ctaVideo={t.hero.ctaVideo}
+    projectsHref={`${base}/projects`}
+  />
+
+  <div class="section-base">
+    <StatsRow
+      stats={[
+        { value: '50+', label: t.stats.projects, description: t.stats.projectsDesc, icon: 'projects' },
+        { value: 'CNC', label: t.stats.cnc, description: t.stats.cncDesc, icon: 'cnc' },
+        { value: '100%', label: t.stats.custom, description: t.stats.customDesc, icon: 'custom' },
+        { value: 'GCC', label: t.stats.export, description: t.stats.exportDesc, icon: 'export' },
+      ]}
+    />
+  </div>
+
+  <section class="section-soft py-16 md:py-24">
+    <div class="editorial-container relative z-10">
+      <SectionHeader title={t.sections.featuredProjects} label={t.nav.projects} />
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+        {projects.filter((p) => p.data.featured).map((project) => (
+          <ProjectCard
+            href={`${base}/projects/${entrySlug(project.id)}`}
+            title={project.data.title}
+            description={project.data.description}
+            image={project.data.heroImage}
+            imageAlt={`${project.data.title} - stone facade manufactured by Eskan Stone in ${project.data.location}`}
+            location={project.data.location}
+            year={project.data.year}
+            ctaLabel={t.project.viewProject}
+          />
+        ))}
+      </div>
+      <div class="mt-10 flex justify-center">
+        <Button href={`${base}/projects`} variant="outline">{t.sections.viewAll}</Button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-base py-16 md:py-24">
+    <div class="editorial-container relative z-10">
+      <SectionHeader title={t.sections.capabilities} subtitle={t.capabilities.subtitle} label={t.nav.capabilities} />
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <FeatureCard title={t.capabilities.cnc} description={t.capabilities.cncDesc} icon="cnc" />
+        <FeatureCard title={t.capabilities.facade} description={t.capabilities.facadeDesc} icon="facade" />
+        <FeatureCard title={t.capabilities.interior} description={t.capabilities.interiorDesc} icon="interior" />
+        <FeatureCard title={t.capabilities.restoration} description={t.capabilities.restorationDesc} icon="restoration" />
+        <FeatureCard title={t.capabilities.export} description={t.capabilities.exportDesc} icon="globe" />
+        <FeatureCard title={t.capabilities.custom} description={t.capabilities.customDesc} icon="custom" />
+      </div>
+      <div class="mt-10 flex justify-center">
+        <Button href={`${base}/capabilities`} variant="outline">{t.common.learnMore}</Button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-soft py-16 md:py-24">
+    <div class="editorial-container relative z-10">
+      <SectionHeader title={t.sections.whyChooseUs} />
+      <div class="grid gap-3 sm:grid-cols-2">
+        <div class="surface-card-dark flex gap-4">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gold/20 bg-gold/5">
+            <Icon name="craft" class="h-4 w-4 text-gold-champagne" />
+          </div>
+          <p class="text-sm leading-relaxed text-eskan-muted">{t.whyChooseUs.craftsmanship}</p>
+        </div>
+        <div class="surface-card-dark flex gap-4">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gold/20 bg-gold/5">
+            <Icon name="cnc" class="h-4 w-4 text-gold-champagne" />
+          </div>
+          <p class="text-sm leading-relaxed text-eskan-muted">{t.whyChooseUs.technology}</p>
+        </div>
+        <div class="surface-card-dark flex gap-4">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gold/20 bg-gold/5">
+            <Icon name="globe" class="h-4 w-4 text-gold-champagne" />
+          </div>
+          <p class="text-sm leading-relaxed text-eskan-muted">{t.whyChooseUs.export}</p>
+        </div>
+        <div class="surface-card-dark flex gap-4">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gold/20 bg-gold/5">
+            <Icon name="custom" class="h-4 w-4 text-gold-champagne" />
+          </div>
+          <p class="text-sm leading-relaxed text-eskan-muted">{t.whyChooseUs.custom}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-base py-16 md:py-24">
+    <div class="editorial-container relative z-10">
+      <SectionHeader title={t.sections.specialWorks} label={t.nav.specialWorks} />
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+        {specialWorks.map((work) => (
+          <ProjectCard
+            href={`${base}/special-works/${entrySlug(work.id)}`}
+            title={work.data.title}
+            description={work.data.description}
+            image={work.data.heroImage}
+            imageAlt={`${work.data.title} - special stonework by Eskan Stone`}
+            location={work.data.location}
+            year={work.data.year}
+            ctaLabel={t.project.viewProject}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-soft py-16 md:py-24">
+    <div class="editorial-container relative z-10">
+      <SectionHeader title={t.sections.latestBlog} label={t.nav.blog} />
+      <div class="grid gap-5 md:grid-cols-3">
+        {blogPosts.map((post) => (
+          <article class="luxury-card group">
+            <a href={`${base}/blog/${entrySlug(post.id)}`} class="block">
+              <div class="overflow-hidden">
+                <img src={post.data.heroImage} alt={post.data.title} loading="lazy" class="image-zoom aspect-[16/10] w-full object-cover" />
+              </div>
+              <div class="p-5">
+                <h3 class="font-display text-base font-semibold text-eskan-ivory">{post.data.title}</h3>
+                <p class="mt-2 line-clamp-2 text-sm text-eskan-muted">{post.data.description}</p>
+                <span class="mt-3 inline-flex items-center gap-2 text-[0.65rem] font-medium uppercase tracking-luxury text-gold-muted transition-all duration-500 group-hover:gap-3 group-hover:text-gold-champagne">
+                  {t.blog.readMore}
+                  <Icon name="arrow" class="h-3 w-3 transition-transform duration-500 group-hover:translate-x-1" />
+                </span>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>

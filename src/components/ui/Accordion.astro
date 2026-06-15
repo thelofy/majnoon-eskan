@@ -1,0 +1,74 @@
+---
+import Icon from '@/components/icons/Icon.astro';
+
+interface Item {
+  title: string;
+  content: string;
+}
+
+interface Props {
+  items: Item[];
+}
+
+const { items } = Astro.props;
+const uid = `acc-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<div class="overflow-hidden rounded-3xl border border-white/10 bg-eskan-charcoal shadow-card" data-accordion={uid}>
+  {
+    items.map((item, index) => (
+      <div class={`accordion-item${index > 0 ? ' border-t border-white/10' : ''}`}>
+        <button
+          type="button"
+          class="accordion-trigger flex w-full items-center justify-between gap-4 px-6 py-5 text-start transition-colors hover:bg-eskan-elevated/50 md:px-8 md:py-6"
+          aria-expanded={index === 0 ? 'true' : 'false'}
+          data-index={index}
+        >
+          <span class="font-display text-lg text-eskan-ivory md:text-xl">{item.title}</span>
+          <span class="accordion-icon flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/30 bg-gold/10 text-gold transition-all duration-300">
+            <Icon name="plus" class="h-4 w-4" />
+          </span>
+        </button>
+        <div
+          class={`accordion-panel overflow-hidden px-6 md:px-8${index !== 0 ? ' hidden' : ''}`}
+          data-panel={index}
+        >
+          <div class="prose prose-sm prose-invert max-w-none pb-6 text-eskan-muted md:pb-8" set:html={item.content} />
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  document.querySelectorAll('[data-accordion]').forEach((root) => {
+    root.querySelectorAll('.accordion-trigger').forEach((trigger) => {
+      trigger.addEventListener('click', () => {
+        const index = trigger.getAttribute('data-index');
+        const panel = root.querySelector(`[data-panel="${index}"]`);
+        const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+
+        root.querySelectorAll('.accordion-trigger').forEach((t) => {
+          t.setAttribute('aria-expanded', 'false');
+          const icon = t.querySelector('.accordion-icon');
+          icon?.classList.remove('bg-gold', 'text-white', 'border-gold');
+          icon?.classList.add('bg-gold/10', 'text-gold', 'border-gold/30');
+        });
+        root.querySelectorAll('.accordion-panel').forEach((p) => p.classList.add('hidden'));
+
+        if (!isOpen) {
+          trigger.setAttribute('aria-expanded', 'true');
+          const icon = trigger.querySelector('.accordion-icon');
+          icon?.classList.remove('bg-gold/10', 'border-gold/30');
+          icon?.classList.add('bg-gold', 'text-white', 'border-gold');
+          panel?.classList.remove('hidden');
+        }
+      });
+    });
+
+    const first = root.querySelector('.accordion-trigger');
+    const firstIcon = first?.querySelector('.accordion-icon');
+    firstIcon?.classList.remove('bg-gold/10', 'border-gold/30');
+    firstIcon?.classList.add('bg-gold', 'text-white', 'border-gold');
+  });
+</script>

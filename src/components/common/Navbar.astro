@@ -1,0 +1,150 @@
+---
+import type { Locale } from '@/i18n/types';
+import { getDictionary, switchLocalePath } from '@/i18n/utils';
+import { locales } from '@/i18n/types';
+import Icon from '@/components/icons/Icon.astro';
+interface Props {
+  locale: Locale;
+  pathname: string;
+}
+
+const { locale, pathname } = Astro.props;
+const t = getDictionary(locale);
+const base = `/${locale}`;
+const otherLocale: Locale = locale === 'fa' ? 'en' : 'fa';
+
+const links = [
+  { href: `${base}/`, label: t.nav.home },
+  { href: `${base}/about`, label: t.nav.about },
+  { href: `${base}/projects`, label: t.nav.projects },
+  { href: `${base}/capabilities`, label: t.nav.capabilities },
+  { href: `${base}/special-works`, label: t.nav.specialWorks },
+  { href: `${base}/blog`, label: t.nav.blog },
+  { href: `${base}/contact`, label: t.nav.contact },
+];
+
+function isActive(href: string) {
+  return pathname === href || (href !== `${base}/` && pathname.startsWith(href));
+}
+
+function linkClass(href: string) {
+  return isActive(href)
+    ? 'rounded-full bg-gold/15 px-4 py-2 text-sm font-medium text-gold-champagne'
+    : 'rounded-full px-4 py-2 text-sm text-eskan-ivory/60 transition-all duration-luxury ease-luxury hover:bg-white/5 hover:text-eskan-ivory';
+}
+
+function mobileLinkClass(href: string) {
+  return isActive(href)
+    ? 'rounded-lg px-3 py-2.5 text-sm bg-gold/15 font-medium text-gold-champagne transition-colors'
+    : 'rounded-lg px-3 py-2.5 text-sm text-eskan-ivory/80 transition-all duration-luxury ease-luxury hover:bg-white/5 hover:text-eskan-ivory';
+}
+---
+
+<header class="fixed inset-x-0 top-0 z-50 px-4 pt-4 md:px-6 md:pt-5">
+  <nav
+    class="glass-nav mx-auto flex h-14 max-w-editorial items-center justify-between rounded-2xl px-4 md:h-16 md:px-6 lg:px-8"
+    aria-label="Main navigation"
+  >
+    <a
+      href={`${base}/`}
+      class="font-display text-lg font-bold tracking-tight text-eskan-ivory transition-colors duration-luxury hover:text-gold-champagne md:text-xl"
+    >
+      {t.siteName}
+    </a>
+
+    <div class="hidden items-center gap-0.5 lg:flex">
+      {links.map((link) => (
+        <a href={link.href} class={linkClass(link.href)}>
+          {link.label}
+        </a>
+      ))}
+      <a
+        href={switchLocalePath(pathname, otherLocale)}
+        class="ms-3 rounded-full border border-gold/25 px-4 py-2 text-[0.65rem] font-semibold uppercase tracking-luxury text-gold-muted transition-all duration-luxury ease-luxury hover:border-gold hover:bg-gold/10 hover:text-gold-champagne"
+        hreflang={locales[otherLocale].lang}
+      >
+        {locales[otherLocale].label}
+      </a>
+    </div>
+
+    <button
+      type="button"
+      id="mobile-menu-btn"
+      class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition-all duration-luxury ease-luxury hover:border-gold/30 lg:hidden"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label={t.common.menu}
+    >
+      <Icon name="menu" class="h-5 w-5 text-eskan-ivory" />
+    </button>
+  </nav>
+</header>
+
+<div
+  id="mobile-menu"
+  class="pointer-events-none fixed inset-0 z-[100] opacity-0 transition-opacity duration-luxury"
+  aria-hidden="true"
+>
+  <div id="mobile-menu-backdrop" class="absolute inset-0 bg-eskan-base/60 backdrop-blur-sm" />
+  <div
+    id="mobile-menu-panel"
+    class="absolute end-4 top-4 flex w-[min(100%,18rem)] translate-x-[calc(100%+1rem)] flex-col overflow-hidden rounded-2xl border border-white/10 bg-eskan-elevated/95 shadow-luxury backdrop-blur-xl transition-transform duration-luxury ease-luxury rtl:-translate-x-[calc(100%+1rem)]"
+  >
+    <div class="flex items-center justify-between border-b border-white/8 px-4 py-3">
+      <span class="text-[0.65rem] font-semibold uppercase tracking-luxury text-gold-muted">{t.common.menu}</span>
+      <button
+        type="button"
+        id="mobile-menu-close"
+        class="flex h-8 w-8 items-center justify-center rounded-lg text-eskan-muted transition-all duration-luxury hover:bg-white/5 hover:text-eskan-ivory"
+        aria-label={t.common.close}
+      >
+        <Icon name="close" class="h-4 w-4" />
+      </button>
+    </div>
+    <nav class="flex flex-col px-2 py-2">
+      {links.map((link) => (
+        <a href={link.href} class={mobileLinkClass(link.href)}>
+          {link.label}
+        </a>
+      ))}
+    </nav>
+    <div class="flex items-center justify-between border-t border-white/8 px-4 py-3">
+      <div class="flex items-center gap-3 text-xs">
+        <a href={switchLocalePath(pathname, 'fa')} class={locale === 'fa' ? 'font-semibold text-gold' : 'text-eskan-muted'}>FA</a>
+        <span class="text-white/15">|</span>
+        <a href={switchLocalePath(pathname, 'en')} class={locale === 'en' ? 'font-semibold text-gold' : 'text-eskan-muted'}>EN</a>
+      </div>
+      <a href={`${base}/contact`} class="text-xs font-medium text-gold-muted transition-colors duration-luxury hover:text-gold">
+        {t.nav.contact}
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const closeBtn = document.getElementById('mobile-menu-close');
+  const menu = document.getElementById('mobile-menu');
+  const panel = document.getElementById('mobile-menu-panel');
+  const backdrop = document.getElementById('mobile-menu-backdrop');
+
+  function openMenu() {
+    menu?.classList.remove('pointer-events-none', 'opacity-0');
+    menu?.setAttribute('aria-hidden', 'false');
+    btn?.setAttribute('aria-expanded', 'true');
+    panel?.classList.remove('translate-x-[calc(100%+1rem)]', 'rtl:-translate-x-[calc(100%+1rem)]');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    menu?.classList.add('pointer-events-none', 'opacity-0');
+    menu?.setAttribute('aria-hidden', 'true');
+    btn?.setAttribute('aria-expanded', 'false');
+    panel?.classList.add('translate-x-[calc(100%+1rem)]', 'rtl:-translate-x-[calc(100%+1rem)]');
+    document.body.style.overflow = '';
+  }
+
+  btn?.addEventListener('click', openMenu);
+  closeBtn?.addEventListener('click', closeMenu);
+  backdrop?.addEventListener('click', closeMenu);
+</script>

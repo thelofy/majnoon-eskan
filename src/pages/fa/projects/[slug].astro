@@ -1,0 +1,110 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Accordion from '@/components/ui/Accordion.astro';
+import Button from '@/components/ui/Button.astro';
+import ProjectGallery from '@/components/ui/ProjectGallery.astro';
+import ProjectMeta from '@/components/ui/ProjectMeta.astro';
+import Icon from '@/components/icons/Icon.astro';
+import { getDictionary } from '@/i18n/utils';
+import { getProjectsByLocale, entrySlug } from '@/lib/content';
+import { buildBreadcrumbJsonLd, buildProjectJsonLd } from '@/lib/seo';
+
+export async function getStaticPaths() {
+  const projects = await getProjectsByLocale('fa');
+  return projects.map((project) => ({
+    params: { slug: entrySlug(project.id) },
+    props: { project },
+  }));
+}
+
+const locale = 'fa';
+const t = getDictionary(locale);
+const { project } = Astro.props;
+const pathname = Astro.url.pathname;
+const base = `/${locale}`;
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://eskanstone.com';
+const d = project.data;
+const totalImages = d.gallery.length + 1;
+
+const jsonLd = [
+  buildBreadcrumbJsonLd([
+    { name: t.nav.home, url: `${site}${base}/` },
+    { name: t.nav.projects, url: `${site}${base}/projects` },
+    { name: d.title, url: `${site}${pathname}` },
+  ]),
+  buildProjectJsonLd({
+    name: d.title,
+    description: d.description,
+    image: `${site}${d.heroImage}`,
+    url: `${site}${pathname}`,
+    location: d.location,
+    year: d.year,
+  }),
+];
+---
+
+<Layout locale={locale} title={d.title} description={d.description} pathname={pathname} image={d.heroImage} jsonLd={jsonLd}>
+  <article>
+    <div class="editorial-container pt-4 md:pt-6">
+      <div class="relative overflow-hidden rounded-4xl">
+        <img
+          src={d.heroImage}
+          alt={`${d.title} — نمای اصلی پروژه سنگ‌کاری اسکان استون در ${d.location}`}
+          fetchpriority="high"
+          class="aspect-[4/3] w-full object-cover md:aspect-[21/9] md:max-h-[65vh]"
+        />
+        <span class="absolute end-5 top-5 rounded-full bg-white/90 px-4 py-2 font-mono text-xs font-medium text-eskan-charcoal shadow-card backdrop-blur-sm">
+          1/{totalImages}
+        </span>
+      </div>
+    </div>
+
+    <div class="section-sheet">
+      <a
+        href={`${base}/projects`}
+        class="inline-flex items-center gap-2 text-sm font-medium text-eskan-muted transition-colors hover:text-gold"
+      >
+        <Icon name="arrow-left" class="h-4 w-4 rtl:rotate-180" />
+        {t.project.backToProjects}
+      </a>
+
+      <h1 class="mt-6 font-display text-4xl font-medium leading-tight text-eskan-ivory md:text-5xl lg:text-6xl">
+        {d.title}
+      </h1>
+      <p class="mt-5 max-w-2xl text-lg leading-relaxed text-eskan-muted">{d.description}</p>
+
+      <div class="mt-10">
+        <ProjectMeta
+          items={[
+            { label: t.project.location, value: d.location, icon: 'location' },
+            { label: t.project.year, value: d.year, icon: 'year' },
+            { label: t.project.stoneType, value: d.stoneType, icon: 'stone' },
+            { label: t.project.scope, value: d.scope, icon: 'scope' },
+            { label: t.project.projectType, value: d.projectType, icon: 'type' },
+          ]}
+        />
+      </div>
+
+      <div class="mt-14">
+        <h2 class="mb-6 font-display text-2xl text-eskan-ivory md:text-3xl">گالری پروژه</h2>
+        <ProjectGallery images={d.gallery} title={d.title} location={d.location} />
+      </div>
+
+      <div class="mt-14">
+        <Accordion
+          items={[
+            { title: t.project.overview, content: d.overview },
+            { title: t.project.cncProduction, content: d.cncProduction },
+            { title: t.project.details, content: d.details },
+          ]}
+        />
+      </div>
+
+      <div class="mt-14 flex justify-center">
+        <Button href={`${base}/contact`} variant="primary" showArrow>
+          {t.project.contactSimilar}
+        </Button>
+      </div>
+    </div>
+  </article>
+</Layout>

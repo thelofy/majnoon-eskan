@@ -1,0 +1,32 @@
+# Example Nginx config for Eskan Stone static site
+# Copy dist/ to /var/www/eskanstone and adjust server_name / SSL paths
+
+server {
+    listen 80;
+    server_name eskanstone.com www.eskanstone.com;
+    root /var/www/eskanstone;
+    index index.html;
+
+    # Default locale redirect (matches Astro root redirect)
+    location = / {
+        return 301 /fa/;
+    }
+
+    location / {
+        try_files $uri $uri/ $uri/index.html =404;
+    }
+
+    # Cache static assets
+    location /assets/ {
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+
+    location /_astro/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    gzip on;
+    gzip_types text/css application/javascript image/svg+xml;
+}

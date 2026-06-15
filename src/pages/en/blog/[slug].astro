@@ -1,0 +1,70 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getDictionary } from '@/i18n/utils';
+import { getBlogByLocale } from '@/lib/content';
+import { entrySlug } from '@/lib/content';
+import { buildArticleJsonLd, buildBreadcrumbJsonLd } from '@/lib/seo';
+
+export async function getStaticPaths() {
+  const posts = await getBlogByLocale('en');
+  return posts.map((post) => ({
+    params: { slug: entrySlug(post.id) },
+    props: { post },
+  }));
+}
+
+const locale = 'en';
+const t = getDictionary(locale);
+const { post } = Astro.props;
+const pathname = Astro.url.pathname;
+const base = `/${locale}`;
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://eskanstone.com';
+const d = post.data;
+const { Content } = await post.render();
+
+const jsonLd = [
+  buildBreadcrumbJsonLd([
+    { name: t.nav.home, url: `${site}${base}/` },
+    { name: t.blog.title, url: `${site}${base}/blog` },
+    { name: d.title, url: `${site}${pathname}` },
+  ]),
+  buildArticleJsonLd({
+    title: d.title,
+    description: d.description,
+    image: `${site}${d.heroImage}`,
+    url: `${site}${pathname}`,
+    publishedTime: d.pubDate.toISOString(),
+    locale,
+  }),
+];
+---
+
+<Layout
+  locale={locale}
+  title={d.title}
+  description={d.description}
+  pathname={pathname}
+  image={d.heroImage}
+  type="article"
+  publishedTime={d.pubDate.toISOString()}
+  jsonLd={jsonLd}
+>
+  <article class="editorial-container py-16 md:py-24">
+    <a href={`${base}/blog`} class="text-xs uppercase tracking-luxury text-eskan-muted hover:text-eskan-charcoal">
+      ← {t.blog.backToBlog}
+    </a>
+    <time class="mt-6 block text-sm text-eskan-muted" datetime={d.pubDate.toISOString()}>
+      {t.blog.publishedOn} {d.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+    </time>
+    <h1 class="mt-4 font-display text-4xl font-medium text-eskan-ivory md:text-5xl">{d.title}</h1>
+    <img
+      src={d.heroImage}
+      alt={d.title}
+      class="mt-10 aspect-[21/9] w-full object-cover"
+      loading="eager"
+    />
+    <div class="prose prose-invert mt-12 max-w-3xl">
+      <Content />
+    </div>
+  </article>
+</Layout>

@@ -1,0 +1,43 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import { getDictionary } from '@/i18n/utils';
+
+const locale = 'en';
+const t = getDictionary(locale);
+const pathname = Astro.url.pathname;
+---
+
+<Layout locale={locale} title={t.about.title} description={t.about.subtitle} pathname={pathname} image="/assets/factory/team-01.jpg">
+  <section class="editorial-container py-16 md:py-24">
+    <SectionHeader title={t.about.title} subtitle={t.about.subtitle} />
+    <div class="grid gap-12 lg:grid-cols-2">
+      <div>
+        <h2 class="font-display text-2xl text-eskan-ivory">{t.about.heritage}</h2>
+        <p class="mt-4 text-eskan-muted leading-relaxed">
+          With over two decades of architectural stonework experience, Eskan Stone draws inspiration from Yazd's rich heritage and combines it with modern CNC technology.
+        </p>
+        <h2 class="mt-10 font-display text-2xl text-eskan-ivory">{t.about.mission}</h2>
+        <p class="mt-4 text-eskan-muted leading-relaxed">
+          Our mission is to deliver the highest quality in design, production, and installation of stone elements for residential, commercial, and international projects.
+        </p>
+      </div>
+      <img
+        src="/assets/factory/team-01.jpg"
+        alt="Eskan Stone expert stonework team at the Yazd production factory"
+        loading="lazy"
+        class="aspect-[4/3] w-full object-cover"
+      />
+    </div>
+    <div class="mt-16 grid gap-6 md:grid-cols-3">
+      {['/assets/factory/cnc-machine-01.jpg', '/assets/factory/workshop-01.jpg', '/assets/factory/production-01.jpg'].map((img, i) => (
+        <img
+          src={img}
+          alt={i === 0 ? 'CNC machine at Eskan Stone factory' : i === 1 ? 'Stonework workshop at Eskan Stone' : 'Stone production line at Eskan Stone factory'}
+          loading="lazy"
+          class="aspect-[3/2] w-full object-cover"
+        />
+      ))}
+    </div>
+  </section>
+</Layout>

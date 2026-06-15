@@ -1,0 +1,22 @@
+---
+import type { Locale } from '@/i18n/types';
+import { locales, switchLocalePath } from '@/i18n/utils';
+
+interface Props {
+  locale: Locale;
+  pathname: string;
+}
+
+const { locale, pathname } = Astro.props;
+const otherLocale: Locale = locale === 'fa' ? 'en' : 'fa';
+const href = switchLocalePath(pathname, otherLocale);
+---
+
+<a
+  href={href}
+  class="text-xs font-medium uppercase tracking-luxury text-eskan-muted transition-colors hover:text-gold-muted"
+  aria-label={`Switch to ${locales[otherLocale].label}`}
+  hreflang={locales[otherLocale].lang}
+>
+  {locales[otherLocale].label}
+</a>

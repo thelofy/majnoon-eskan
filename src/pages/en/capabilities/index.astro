@@ -1,0 +1,57 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import CapabilityRow from '@/components/sections/CapabilityRow.astro';
+import { getDictionary } from '@/i18n/utils';
+
+const locale = 'en';
+const t = getDictionary(locale);
+const pathname = Astro.url.pathname;
+---
+
+<Layout locale={locale} title={t.capabilities.title} description={t.capabilities.subtitle} pathname={pathname}>
+  <section class="editorial-container py-16 md:py-24">
+    <SectionHeader title={t.capabilities.title} subtitle={t.capabilities.subtitle} />
+    <div class="space-y-16">
+      <CapabilityRow
+        title={t.capabilities.cnc}
+        desc="Precision carving with 5-axis machinery and CAM programming"
+        image="/assets/factory/cnc-machine-02.jpg"
+        alt="5-axis CNC machine at Eskan Stone factory"
+      />
+      <CapabilityRow
+        title={t.capabilities.facade}
+        desc="Production of capitals, cornices, panels, and classical facade elements"
+        image="/assets/projects/villa-mollasadra/detail-02.jpg"
+        alt="Villa Mollasadra facade stone detail by Eskan Stone"
+        reversed
+      />
+      <CapabilityRow
+        title={t.capabilities.interior}
+        desc="Wall cladding, flooring, and luxury interior stonework"
+        image="/assets/projects/pardebaf-showroom/detail-01.jpg"
+        alt="Pardebaf showroom interior stone detail"
+      />
+      <CapabilityRow
+        title={t.capabilities.restoration}
+        desc="Restoration of historic elements using traditional and modern techniques"
+        image="/assets/factory/workshop-02.jpg"
+        alt="Stone restoration workshop at Eskan Stone"
+        reversed
+      />
+      <CapabilityRow
+        title={t.capabilities.export}
+        desc="Professional packaging and international logistics"
+        image="/assets/factory/loading-01.jpg"
+        alt="Stone export loading at Eskan Stone factory"
+      />
+      <CapabilityRow
+        title={t.capabilities.custom}
+        desc="3D design and prototyping before mass production"
+        image="/assets/factory/production-02.jpg"
+        alt="Custom stone production at Eskan Stone factory"
+        reversed
+      />
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,49 @@
+---
+import Icon from '@/components/icons/Icon.astro';
+
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'outline' | 'outline-light' | 'ghost' | 'glass';
+  class?: string;
+  type?: 'button' | 'submit';
+  ariaLabel?: string;
+  showArrow?: boolean;
+}
+
+const {
+  href,
+  variant = 'primary',
+  class: className = '',
+  type = 'button',
+  ariaLabel,
+  showArrow = false,
+} = Astro.props;
+
+const base =
+  'inline-flex items-center justify-center gap-2.5 text-sm font-medium transition-all duration-luxury ease-luxury';
+
+const variants = {
+  primary: 'pill-gold',
+  outline: 'pill-outline',
+  'outline-light': 'pill-outline-light',
+  ghost:
+    'rounded-full px-4 py-2 text-gold-muted underline-offset-4 transition-all duration-luxury ease-luxury hover:text-gold-champagne hover:underline',
+  glass: 'glass-btn',
+};
+
+const classes = `${base} ${variants[variant]} ${className}`;
+---
+
+{
+  href ? (
+    <a href={href} class={classes} aria-label={ariaLabel}>
+      <slot />
+      {showArrow && <Icon name="arrow" class="h-4 w-4" />}
+    </a>
+  ) : (
+    <button type={type} class={classes} aria-label={ariaLabel}>
+      <slot />
+      {showArrow && <Icon name="arrow" class="h-4 w-4" />}
+    </button>
+  )
+}

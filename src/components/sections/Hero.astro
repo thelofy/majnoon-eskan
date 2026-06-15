@@ -1,0 +1,59 @@
+---
+import Button from '@/components/ui/Button.astro';
+interface Props {
+  title: string;
+  subtitle: string;
+  image: string;
+  imageAlt: string;
+  ctaProjects: string;
+  ctaVideo: string;
+  projectsHref: string;
+}
+
+const { title, subtitle, image, imageAlt, ctaProjects, ctaVideo, projectsHref } = Astro.props;
+---
+
+<section class="relative min-h-[100svh] overflow-hidden">
+  <img
+    src={image}
+    alt={imageAlt}
+    fetchpriority="high"
+    decoding="async"
+    width="1920"
+    height="1080"
+    class="absolute inset-0 h-full w-full object-cover"
+  />
+  <div class="absolute inset-0 bg-gradient-to-t from-eskan-base via-eskan-base/70 to-eskan-base/30" />
+  <div class="absolute inset-0 bg-gradient-to-r from-eskan-base/60 via-eskan-base/20 to-transparent" />
+
+  <div class="relative flex min-h-[100svh] flex-col justify-end px-5 pb-16 pt-32 md:px-10 md:pb-24 lg:px-16">
+    <div class="mx-auto w-full max-w-editorial">
+      <div class="max-w-3xl">
+        <p class="mb-6 flex items-center gap-3 text-[0.65rem] font-semibold uppercase tracking-luxury text-gold-champagne">
+          <span class="h-px w-8 bg-gold/50" />
+          Eskan Stone
+        </p>
+        <h1 class="font-display text-[2.25rem] font-semibold leading-[1.12] tracking-editorial text-eskan-ivory md:text-5xl lg:text-6xl text-balance">
+          {title}
+        </h1>
+        <p class="mt-5 max-w-md text-sm leading-relaxed text-eskan-muted md:text-base text-balance">
+          {subtitle}
+        </p>
+        <div class="mt-10 flex flex-wrap items-center gap-4">
+          <Button href={projectsHref} variant="primary" showArrow>
+            {ctaProjects}
+          </Button>
+          <Button href="#factory-video" variant="outline">
+            <svg class="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+            {ctaVideo}
+          </Button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="absolute bottom-8 start-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 md:flex">
+    <span class="text-[0.6rem] uppercase tracking-luxury text-eskan-ivory/30">Scroll</span>
+    <div class="h-10 w-px bg-gradient-to-b from-gold/50 to-transparent" />
+  </div>
+</section>

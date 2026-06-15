@@ -1,0 +1,43 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import { getDictionary } from '@/i18n/utils';
+
+const locale = 'fa';
+const t = getDictionary(locale);
+const pathname = Astro.url.pathname;
+---
+
+<Layout locale={locale} title={t.about.title} description={t.about.subtitle} pathname={pathname} image="/assets/factory/team-01.jpg">
+  <section class="editorial-container py-16 md:py-24">
+    <SectionHeader title={t.about.title} subtitle={t.about.subtitle} />
+    <div class="grid gap-12 lg:grid-cols-2">
+      <div>
+        <h2 class="font-display text-2xl text-eskan-ivory">{t.about.heritage}</h2>
+        <p class="mt-4 text-eskan-muted leading-relaxed">
+          اسکان استون با بیش از دو دهه تجربه در سنگ‌کاری معماری، از میراث غنی یزد الهام گرفته و آن را با فناوری CNC مدرن ترکیب می‌کند.
+        </p>
+        <h2 class="mt-10 font-display text-2xl text-eskan-ivory">{t.about.mission}</h2>
+        <p class="mt-4 text-eskan-muted leading-relaxed">
+          مأموریت ما ارائه بالاترین کیفیت در طراحی، تولید و نصب عناصر سنگی برای پروژه‌های مسکونی، تجاری و بین‌المللی است.
+        </p>
+      </div>
+      <img
+        src="/assets/factory/team-01.jpg"
+        alt="تیم متخصص سنگ‌کاری اسکان استون در کارخانه تولید یزد"
+        loading="lazy"
+        class="aspect-[4/3] w-full object-cover"
+      />
+    </div>
+    <div class="mt-16 grid gap-6 md:grid-cols-3">
+      {['/assets/factory/cnc-machine-01.jpg', '/assets/factory/workshop-01.jpg', '/assets/factory/production-01.jpg'].map((img, i) => (
+        <img
+          src={img}
+          alt={i === 0 ? 'دستگاه CNC در کارخانه اسکان استون' : i === 1 ? 'کارگاه سنگ‌کاری اسکان استون' : 'خط تولید سنگ اسکان استون'}
+          loading="lazy"
+          class="aspect-[3/2] w-full object-cover"
+        />
+      ))}
+    </div>
+  </section>
+</Layout>

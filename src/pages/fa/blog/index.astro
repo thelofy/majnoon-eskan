@@ -1,0 +1,35 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import { getDictionary } from '@/i18n/utils';
+import { getBlogByLocale } from '@/lib/content';
+import { entrySlug } from '@/lib/content';
+
+const locale = 'fa';
+const t = getDictionary(locale);
+const pathname = Astro.url.pathname;
+const posts = await getBlogByLocale(locale);
+const base = `/${locale}`;
+---
+
+<Layout locale={locale} title={t.blog.title} description={t.sections.latestBlog} pathname={pathname}>
+  <section class="editorial-container py-16 md:py-24">
+    <SectionHeader title={t.blog.title} />
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {posts.map((post) => (
+        <article class="luxury-card">
+          <a href={`${base}/blog/${entrySlug(post.id)}`}>
+            <img src={post.data.heroImage} alt={post.data.title} loading="lazy" class="aspect-[16/10] w-full object-cover" />
+            <div class="p-6">
+              <time class="text-xs text-eskan-muted" datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('fa-IR')}
+              </time>
+              <h2 class="mt-2 font-display text-xl text-eskan-ivory">{post.data.title}</h2>
+              <p class="mt-2 text-sm text-eskan-muted">{post.data.description}</p>
+            </div>
+          </a>
+        </article>
+      ))}
+    </div>
+  </section>
+</Layout>
